@@ -140,3 +140,11 @@ button {
 	color: #fe9a01;
 	background: transparent;
 }
+
+.confirmation {
+	font-weight: 700;
+	font-size: 44px;
+	line-height: 52px;
+	text-align: center;
+	color: #fff;
+}
