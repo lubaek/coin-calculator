@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import au from "../images/au ic.png";
 import bitcoin from "../images/bitcoin ic.png";
+import Dropdown from "./Dropdown";
+import { options } from "./Options";
 
 function Calculator() {
+	const [selected, setSelected] = useState(options[0]);
 	return (
 		<div className="container">
 			<div className="calculator">
+				<Dropdown selected={selected} setSelected={setSelected} />
 				<div className="actions">
 					<button className="actions-btn active">Buy</button>
 					<button className="actions-btn">Sell</button>
