@@ -39,8 +39,10 @@ function Calculator() {
 
 	useLayoutEffect(() => {
 		const id = JSON.parse(localStorage.getItem("currency"));
-		const currency = options.find((item) => item.id === id);
-		setSelected(currency);
+		if (id) {
+			const currency = options.find((item) => item.id === id);
+			setSelected(currency);
+		} else setSelected(options[0]);
 	}, []);
 
 	useEffect(() => {
