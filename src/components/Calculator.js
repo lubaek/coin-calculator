@@ -12,6 +12,8 @@ function Calculator() {
 	const [currency, setCurrency] = useState("");
 	const [currencyInput, setCurrencyInput] = useState("");
 	const [bitcoinInput, setBitcoinInput] = useState("");
+	const [datetime, setDatetime] = useState("");
+	const [forceUpdate, setForceUpdate] = useState(false);
 
 	const handleCurrencyChange = (event) => {
 		setCurrencyInput(event.target.value);
@@ -52,10 +54,23 @@ function Calculator() {
 			);
 			setCurrency(data.bitcoin[selected.title.toLowerCase()]);
 		};
+
 		getCurrency();
-		setBitcoinInput("");
-		setCurrencyInput("");
-	}, [selected, isBuyPage]);
+		const datetime = new Date().toLocaleString() + "";
+		setDatetime(datetime);
+
+		const intervalId = setInterval(() => {
+			getCurrency();
+			setBitcoinInput("");
+			setCurrencyInput("");
+			const datetime = new Date().toLocaleString() + "";
+			setDatetime(datetime);
+		}, 5000);
+
+		return () => {
+			clearInterval(intervalId);
+		};
+	}, [selected, isBuyPage, forceUpdate]);
 
 	return (
 		<div className="container">
@@ -83,6 +98,21 @@ function Calculator() {
 							{currency && <span>{currency}</span>}
 							&nbsp;{selected.title}
 						</p>
+						<div className="form-update">
+							<p className="form-update__time">
+								Last update:&nbsp;
+								<span>{datetime}</span>
+							</p>
+
+							<button
+								className="form-update__btn"
+								type="button"
+								onClick={() => setForceUpdate(!forceUpdate)}
+							>
+								Update values
+							</button>
+						</div>
+
 						<div className="form-item">
 							<label>{isBuyPage ? "You pay" : "You receive"}</label>
 							<div className="form-input">
@@ -94,7 +124,6 @@ function Calculator() {
 								<input
 									type="number"
 									value={currencyInput}
-									disabled={!isBuyPage}
 									onChange={handleCurrencyChange}
 								/>
 							</div>
@@ -110,7 +139,6 @@ function Calculator() {
 								<input
 									type="number"
 									value={bitcoinInput}
-									disabled={isBuyPage}
 									onChange={handleBitcoinChange}
 								/>
 							</div>

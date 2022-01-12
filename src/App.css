@@ -27,7 +27,7 @@ button {
 
 .calculator {
 	width: 80%;
-	height: 558px;
+	height: 600px;
 	max-width: 365px;
 	position: relative;
 }
@@ -90,11 +90,38 @@ button {
 .form-price {
 	font-size: 16px;
 	font-weight: 400;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 .form-price span {
 	font-weight: 900;
+}
+
+.form-update {
+	margin-bottom: 20px;
+}
+
+.form-update__time {
+	font-weight: bold;
+}
+.form-update__time span {
+	font-weight: normal;
+}
+
+.form-update__btn {
+	display: block;
+	margin-top: 10px;
+	padding: 10px 15px;
+	border: 1px solid #333;
+	border-radius: 3px;
+	background-color: #333;
+	color: #fff;
+	font-size: 14px;
+}
+
+.form-update__btn:hover {
+	background: transparent;
+	color: #333;
 }
 
 .form-item {
