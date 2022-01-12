@@ -1,11 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Confirmation() {
+	const navigate = useNavigate();
+	const confirmation = JSON.parse(localStorage.getItem("confirmation"));
 	return (
 		<div className="container">
-			<h2 className="confirmation">
-				You brought 0.019485 BTC <br /> for 500 AUD!
-			</h2>
+			<div className="confirmation">
+				<h2>
+					You {confirmation.isBuyPage ? "brought" : "sold"}&nbsp;
+					<span>{confirmation.bitcoinInput}</span> BTC <br />
+					for <span>{confirmation.currencyInput}</span>&nbsp;
+					<span>{confirmation.currency}</span>!
+				</h2>
+
+				<button className="confirmation-btn" onClick={() => navigate("/")}>
+					Back
+				</button>
+			</div>
 		</div>
 	);
 }

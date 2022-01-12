@@ -4,6 +4,11 @@ import { options } from "./Options";
 
 function Dropdown({ selected, setSelected }) {
 	const [isActive, setIsActive] = useState(false);
+	const handleClick = (e, option) => {
+		setSelected(option);
+		setIsActive(false);
+		localStorage.setItem("currency", JSON.stringify(option.id));
+	};
 	return (
 		<div className="dropdown">
 			<div className="dropdown__inner">
@@ -17,10 +22,7 @@ function Dropdown({ selected, setSelected }) {
 						{options.map((option, index) => (
 							<div
 								key={index}
-								onClick={(e) => {
-									setSelected(option);
-									setIsActive(false);
-								}}
+								onClick={(e) => handleClick(e, option)}
 								className="dropdown-item"
 							>
 								<img src={option.img} alt="icon" />

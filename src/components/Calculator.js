@@ -1,50 +1,127 @@
-import React, { useState } from "react";
-import au from "../images/au ic.png";
+import React, { useState, useLayoutEffect, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import bitcoin from "../images/bitcoin ic.png";
 import Dropdown from "./Dropdown";
 import { options } from "./Options";
 
 function Calculator() {
+	const navigate = useNavigate();
 	const [selected, setSelected] = useState(options[0]);
+	const [isBuyPage, setIsBuypage] = useState(true);
+	const [currency, setCurrency] = useState("");
+	const [currencyInput, setCurrencyInput] = useState("");
+	const [bitcoinInput, setBitcoinInput] = useState("");
+
+	const handleCurrencyChange = (event) => {
+		setCurrencyInput(event.target.value);
+		let bitcoinInput = Number(event.target.value) / Number(currency);
+		setBitcoinInput(Math.round(bitcoinInput * 100000) / 100000);
+	};
+
+	const handleBitcoinChange = (event) => {
+		setBitcoinInput(event.target.value);
+		let currencyInput = Number(event.target.value) * Number(currency);
+		setCurrencyInput(Math.round(currencyInput * 100000) / 100000);
+	};
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		const confirmation = {
+			isBuyPage,
+			bitcoinInput,
+			currencyInput,
+			currency: selected.title,
+		};
+		localStorage.setItem("confirmation", JSON.stringify(confirmation));
+		navigate("/confirmation");
+	};
+
+	useLayoutEffect(() => {
+		const id = JSON.parse(localStorage.getItem("currency"));
+		const currency = options.find((item) => item.id === id);
+		setSelected(currency);
+	}, []);
+
+	useEffect(() => {
+		const getCurrency = async () => {
+			const { data } = await axios.get(
+				`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${selected.title.toLowerCase()}`
+			);
+			setCurrency(data.bitcoin[selected.title.toLowerCase()]);
+		};
+		getCurrency();
+		setBitcoinInput("");
+		setCurrencyInput("");
+	}, [selected, isBuyPage]);
+
 	return (
 		<div className="container">
 			<div className="calculator">
 				<Dropdown selected={selected} setSelected={setSelected} />
-				<div className="actions">
-					<button className="actions-btn active">Buy</button>
-					<button className="actions-btn">Sell</button>
+				<div className="calculator__inner">
+					<div className="actions">
+						<button
+							className={isBuyPage ? "actions-btn active" : "actions-btn"}
+							onClick={() => setIsBuypage(true)}
+						>
+							Buy
+						</button>
+						<button
+							className={isBuyPage ? "actions-btn" : "actions-btn active"}
+							onClick={() => setIsBuypage(false)}
+						>
+							Sell
+						</button>
+					</div>
+					<form className="calculator-form" onSubmit={handleSubmit}>
+						<h4 className="form-title">Live Price</h4>
+						<p className="form-price">
+							1 BTC /&nbsp;
+							{currency && <span>{currency}</span>}
+							&nbsp;{selected.title}
+						</p>
+						<div className="form-item">
+							<label>{isBuyPage ? "You pay" : "You receive"}</label>
+							<div className="form-input">
+								<div className="form-input__icon">
+									<img src={selected.roundImg} alt="au icon" />
+									<span>{selected.title}</span>
+								</div>
+
+								<input
+									type="number"
+									value={currencyInput}
+									disabled={!isBuyPage}
+									onChange={handleCurrencyChange}
+								/>
+							</div>
+						</div>
+						<div className="form-item">
+							<label>{isBuyPage ? "You receive" : "You pay"}</label>
+							<div className="form-input">
+								<div className="form-input__icon">
+									<img src={bitcoin} alt="bitcoin icon" />
+									<span>BTC</span>
+								</div>
+
+								<input
+									type="number"
+									value={bitcoinInput}
+									disabled={isBuyPage}
+									onChange={handleBitcoinChange}
+								/>
+							</div>
+						</div>
+						<button
+							type="submit"
+							className="form-btn"
+							disabled={!bitcoinInput && !currencyInput}
+						>
+							{isBuyPage ? "Buy" : "Sell"}
+						</button>
+					</form>
 				</div>
-				<form className="calculator-form">
-					<h4 className="form-title">Live Price</h4>
-					<p className="form-price">
-						1 BTC / <span>$25,535.00</span> AUD
-					</p>
-					<div className="form-item">
-						<label>You pay</label>
-						<div className="form-input">
-							<div className="form-input__icon">
-								<img src={au} alt="au icon" />
-								<span>AUD</span>
-							</div>
-
-							<input type="text" />
-						</div>
-					</div>
-					<div className="form-item">
-						<label>You receive</label>
-						<div className="form-input">
-							<div className="form-input__icon">
-								<img src={bitcoin} alt="bitcoin icon" />
-								<span>BTC</span>
-							</div>
-
-							<input type="text" />
-						</div>
-					</div>
-					<button type="submit" className="form-btn">
-						Buy
-					</button>
-				</form>
 			</div>
 		</div>
 	);
