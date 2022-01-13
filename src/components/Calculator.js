@@ -56,6 +56,8 @@ function Calculator() {
 		};
 
 		getCurrency();
+		setBitcoinInput("");
+		setCurrencyInput("");
 		const datetime = new Date().toLocaleString() + "";
 		setDatetime(datetime);
 
