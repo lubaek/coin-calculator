@@ -65,7 +65,7 @@ function Calculator() {
 			setCurrencyInput("");
 			const datetime = new Date().toLocaleString() + "";
 			setDatetime(datetime);
-		}, 5000);
+		}, 60000);
 
 		return () => {
 			clearInterval(intervalId);
