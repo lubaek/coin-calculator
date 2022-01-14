@@ -5,13 +5,6 @@ function Confirmation() {
 	const navigate = useNavigate();
 	const confirmation = JSON.parse(localStorage.getItem("confirmation"));
 
-	const handleClick = () => {
-		if (confirmation.status === "sold") {
-			navigate("/sell");
-		} else {
-			navigate("/");
-		}
-	};
 	return (
 		<div className="container">
 			<div className="confirmation">
@@ -22,7 +15,7 @@ function Confirmation() {
 					<span>{confirmation.currency}</span>!
 				</h2>
 
-				<button className="confirmation-btn" onClick={handleClick}>
+				<button className="confirmation-btn" onClick={() => navigate(-1)}>
 					Back
 				</button>
 			</div>

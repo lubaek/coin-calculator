@@ -22,7 +22,10 @@ function SellPage() {
 		const { data } = await axios.get(
 			`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${selected?.title?.toLowerCase()}`
 		);
-		setCurrency(data?.bitcoin[selected?.title?.toLowerCase()]);
+
+		if (data.bitcoin) {
+			setCurrency(data.bitcoin[selected?.title?.toLowerCase()]);
+		}
 	};
 
 	const handleCurrencyChange = (event) => {
@@ -36,15 +39,10 @@ function SellPage() {
 	};
 
 	const startInterval = () => {
-		intervalId.current = setInterval(() => {
+		intervalId.current = setInterval(async () => {
 			getCurrency();
 			const datetime = new Date().toLocaleString() + "";
 			setDatetime(datetime);
-			if (currencyInput) {
-				setBitcoinInput(countBitcoin(currencyInput, currency));
-			} else {
-				setBitcoinInput("");
-			}
 		}, 60000);
 	};
 
@@ -64,7 +62,7 @@ function SellPage() {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const confirmation = {
-			status: "sold",
+			status: "brought",
 			bitcoinInput,
 			currencyInput,
 			currency: selected.title,
@@ -83,10 +81,15 @@ function SellPage() {
 
 	useEffect(() => {
 		startInterval();
+		if (currencyInput) {
+			setBitcoinInput(countBitcoin(currencyInput, currency));
+		} else {
+			setBitcoinInput("");
+		}
 		return () => {
 			clearInterval(intervalId.current);
 		};
-	}, [currencyInput, selected]); //eslint-disable-line
+	}, [currencyInput, selected, currency]); //eslint-disable-line
 
 	useEffect(() => {
 		getCurrency();
