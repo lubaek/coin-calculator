@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../Dropdown.css";
-import { options } from "./Options";
+import { options } from "../utils/options";
 
 function Dropdown({ selected, setSelected }) {
 	const [isActive, setIsActive] = useState(false);
