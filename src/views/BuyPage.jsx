@@ -112,10 +112,7 @@ function BuyPage() {
 					</div>
 					<form className="calculator-form" onSubmit={handleSubmit}>
 						<LivePrice currency={currency} selected={selected} />
-						<LastUpdate
-							datetime={datetime}
-							handleUpdateClick={handleUpdateClick}
-						/>
+						<LastUpdate datetime={datetime} handleUpdateClick={handleUpdateClick} />
 						<FormInput
 							labelTitle="You pay"
 							img={selected.roundImg}
